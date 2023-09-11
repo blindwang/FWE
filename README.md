@@ -1,3 +1,5 @@
+# Free Water estimation
+
 ## Preprocess
 
 `python: 3.11`
@@ -27,11 +29,11 @@ pip install dipy==1.7.0
 ```
 DTI original image data：
 
-![ori.png](3323_niigz%2Fori.png)
+![ori.png](3323_niigz/ori.png)
 
 After motion correction：
 
-![motion_correction.png](3323_niigz%2Fmotion_correction.png)
+![motion_correction.png](3323_niigz/motion_correction.png)
 
 code: refer to [motion_correction.ipynb](motion_correction.ipynb)
 
@@ -165,6 +167,31 @@ model可以选择``"3DShore"``, ``"SFM"``, ``"DTI"``, ``"DKI"``, ``"S0"``
 
 ![model option](result_pic/model-options.png)
 
+**修改源码**:
+
+由于ants中的use-estimate-learning-rate-once参数已经被舍弃，需要修改nipype中的代码
+
+将`fwe/lib/python3.11/site-packages/nipype/interfaces/ants/`下的`registration.py`中的这段代码注释：
+
+```python
+if isdefined(self.inputs.use_estimate_learning_rate_once):
+    retval.append(
+        "--use-estimate-learning-rate-once %d"
+        % self.inputs.use_estimate_learning_rate_once[ii]
+    )
+```
+
+原图：
+
+![ori](result_pic/ori.png)
+
+eddy motion correction后的可视化结果：
+
+![eddymotion_correction](result_pic/eddymotion_correction.png)
+
+
+code: refer to [Parallel_Run_DTI_Model.ipynb](Parallel_Run_DTI_Model.ipynb)
+
 ## Compute Free-Water Maps: 
 
 (1) Estimate free-water maps: Utilize appropriate algorithms (e.g., Free-Water Elimination, FWE) to estimate the presence of free water in each voxel. Free water refers to the cerebrospinal fluid (CSF) component in the brain, which has isotropic diffusion characteristics.
@@ -173,11 +200,11 @@ model可以选择``"3DShore"``, ``"SFM"``, ``"DTI"``, ``"DKI"``, ``"S0"``
 
 model convergence:
 
-![loss.png](result_pic%2Floss.png)
+![loss.png](result_pic/loss.png)
 
 Free-Water Maps:
 
-![free_water_map.png](result_pic%2Ffree_water_map.png)
+![free_water_map.png](result_pic/free_water_map.png)
 
 ## Free-Water Correction:
 
@@ -187,11 +214,11 @@ Free-Water Maps:
 
 Mean Diffusivity (free water corrected):
 
-![free_water_corrected.png](result_pic%2Ffree_water_corrected.png)
+![free_water_corrected.png](result_pic/free_water_corrected.png)
 
 Fractional Anisotropy (free water corrected):
 
-![free_water_corrected_fa.png](result_pic%2Ffree_water_corrected_fa.png)
+![free_water_corrected_fa.png](result_pic/free_water_corrected_fa.png)
 
 code: refer to [example_customized.ipynb](example_customized.ipynb)
 
